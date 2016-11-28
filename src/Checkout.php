@@ -8,6 +8,6 @@
  */
 namespace Adteam\Core\Checkout;
 
-class Dummy{
+class Checkout{
 
 }
