@@ -11,7 +11,7 @@ namespace Adteam\Core\Checkout\Repository;
 use Doctrine\ORM\EntityRepository;
 use Adteam\Core\Checkout\Entity\OauthUsers;
 use Adteam\Core\Checkout\Entity\CoreCheckoutActivationLog;
-
+use Adteam\Core\Checkout\Entity\CoreConfigs;
 /**
  * 
  */
@@ -103,18 +103,27 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
      * @param type $status
      */
     public function insertLog($user,$status)
+            
     {
+        $currentRepo = $this;
         $this->_em->transactional(
-            function ($em) use($status,$user) {
+            function ($em) use($status,$user,$currentRepo) {
                 $log = new CoreCheckoutActivationLog();
                 $UserReference = $em->getReference(
                             OauthUsers::class, $user['id']);
-
                 $log->setRequestedBy($UserReference);
                 $log->setStatus($status);
-                $em->persist($log);
+                $em->persist($log);             
+                $currentRepo->updateCheckoutEnabled($status);
             }
-        );        
-        
+        );
+    }
+    
+    private function updateCheckoutEnabled($status)
+    {    
+        $s = (int)$status;
+        $dql ="UPDATE Adteam\Core\Checkout\Entity\CoreConfigs U SET U.value = '"
+                . $s."' WHERE U.key like 'checkout.enabled'";
+        return $this->_em->createQuery($dql)->getResult();
     }
 }
