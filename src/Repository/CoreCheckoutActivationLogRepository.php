@@ -26,8 +26,8 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
     public function fetchLast()
     {
        $result = $this->createQueryBuilder('B')
-               ->select("B.id, DATE_FORMAT(B.createdAt,'%d-%m-%Y %H:%i:%s'), R.displayName, B.status")
-//               ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
+//               ->select("B.id, DATE_FORMAT(B.createdAt,'%d-%m-%Y %H:%i:%s'), R.displayName, B.status")
+               ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
                ->innerJoin('B.requestedBy', 'R')
                ->orderBy('B.createdAt','DESC')
                ->getQuery()->getResult();
@@ -38,21 +38,54 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
                 'Inicializar_canje'); 
     }
     
+    /**
+     * verifica si esta vacio log 
+     * 
+     * @return boolean
+     */
+    private function hasInit()
+    {
+        $isInit = false;
+        $result = $this->createQueryBuilder('B')
+           ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
+           ->innerJoin('B.requestedBy', 'R')
+           ->getQuery()->getResult();  
+        if(count($result)<=0){
+            $isInit = true;
+        }
+        return $isInit;
+        
+    }
+
     public function create($data,$identity)
     {
         $user = $this->getUserByUsername($identity['user_id']);
-        $lastcreated = $this->fetchLast();
-
         $enabled = (boolean)$data->enabled;
-        if($enabled===$lastcreated['status']){            
-           $activo = $lastcreated['status']?'canje activo':'canje cerrado';
-           throw new \InvalidArgumentException($activo);             
+        if($this->hasInit()){
+            if($enabled===TRUE){
+                $this->insertLog($user, true);
+                return true; 
+            }else{
+                throw new \InvalidArgumentException('only_true');
+            }
+        }else{
+            $lastcreated = $this->fetchLast();
+            if($enabled===$lastcreated['status']){
+               $activo = $lastcreated['status']?'canje activo':'canje cerrado';
+               throw new \InvalidArgumentException($activo);                
+            }
+            $this->insertLog($user, $enabled);
+            return $enabled; 
         }
-        $this->insertLog($user, $enabled);
-        return $lastcreated['status']?false:true;
     }
-    
-    public function getUserByUsername($username='testuser')
+
+    /**
+     * Obtiene usuario mediante username
+     * 
+     * @param type $username
+     * @return type
+     */
+    public function getUserByUsername($username)
     {
         return $this->_em->getRepository(OauthUsers::class)
                 ->createQueryBuilder('U')
@@ -62,6 +95,13 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
                 ->getQuery()->getSingleResult();
     }
     
+    /**
+     * Inserta log de apertura y cierre
+     * de canje
+     * 
+     * @param type $user
+     * @param type $status
+     */
     public function insertLog($user,$status)
     {
         $this->_em->transactional(

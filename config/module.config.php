@@ -10,7 +10,6 @@ return [
             'orm_default' => [
                 'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
                 'params' => [
-                    'url' => 'mysqli://adbox:adbox@localhost/adbox',
                     'charset' => 'utf8',
                 ],
             ],
