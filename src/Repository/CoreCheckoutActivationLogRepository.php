@@ -70,8 +70,8 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
             }
         }else{
             $lastcreated = $this->fetchLast();
-            if($enabled===$lastcreated['status']){
-               $activo = $lastcreated['status']?'canje activo':'canje cerrado';
+            if($enabled===$lastcreated['enabled']){
+               $activo = $lastcreated['enabled']?'canje activo':'canje cerrado';
                throw new \InvalidArgumentException($activo);                
             }
             $this->insertLog($user, $enabled);
