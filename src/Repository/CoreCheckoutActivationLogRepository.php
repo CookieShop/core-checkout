@@ -11,10 +11,7 @@ namespace Adteam\Core\Checkout\Repository;
 use Doctrine\ORM\EntityRepository;
 use Adteam\Core\Checkout\Entity\OauthUsers;
 use Adteam\Core\Checkout\Entity\CoreCheckoutActivationLog;
-use Adteam\Core\Checkout\Entity\CoreConfigs;
-/**
- * 
- */
+
 class CoreCheckoutActivationLogRepository extends EntityRepository
 {
    
@@ -26,8 +23,9 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
     public function fetchLast()
     {
        $result = $this->createQueryBuilder('B')
-               ->select("B.status as enabled,DATE_FORMAT(B.createdAt,'%d-%m-%Y %H:%i:%s') as version")
-//               ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
+               ->select("B.status as enabled,DATE_FORMAT(B.createdAt,'%d-%m-%Y".
+                       " %H:%i:%s') as version")
+//        ->select("B.status as enabled,B.createdAt as version")
                ->innerJoin('B.requestedBy', 'R')
                ->orderBy('B.createdAt','DESC')
                ->getQuery()->getResult();
@@ -57,6 +55,13 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
         
     }
 
+    /**
+     * 
+     * @param type $data
+     * @param type $identity
+     * @return boolean
+     * @throws \InvalidArgumentException
+     */
     public function create($data,$identity)
     {
         $user = $this->getUserByUsername($identity['user_id']);
@@ -119,6 +124,12 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
         );
     }
     
+    /**
+     * update estatus core config
+     * 
+     * @param type $status
+     * @return type
+     */
     private function updateCheckoutEnabled($status)
     {    
         $s = (int)$status;

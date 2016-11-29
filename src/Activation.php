@@ -39,6 +39,7 @@ class Activation{
     }
     
     /**
+     * verifica activacion
      * 
      * @return type
      */
@@ -50,14 +51,14 @@ class Activation{
     }
     
     /**
+     * crea por post log
      * 
      * @param type $data
      * @return type
      */
     public function create($data)
     {
-        $em = $this->services->get(EntityManager::class);
-        
+        $em = $this->services->get(EntityManager::class);        
         return $em
                 ->getRepository(CoreCheckoutActivationLog::class)
                 ->create($data,$this->identity);         
