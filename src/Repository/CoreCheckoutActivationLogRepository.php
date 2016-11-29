@@ -26,8 +26,8 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
     public function fetchLast()
     {
        $result = $this->createQueryBuilder('B')
-//               ->select("B.id, DATE_FORMAT(B.createdAt,'%d-%m-%Y %H:%i:%s'), R.displayName, B.status")
-               ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
+               ->select("B.status as enabled,DATE_FORMAT(B.createdAt,'%d-%m-%Y %H:%i:%s') as version")
+//               ->select("B.id, B.createdAt, R.id as userId, R.displayName, B.status")
                ->innerJoin('B.requestedBy', 'R')
                ->orderBy('B.createdAt','DESC')
                ->getQuery()->getResult();
