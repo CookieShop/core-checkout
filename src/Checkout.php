@@ -17,6 +17,7 @@ use Adteam\Core\Checkout\Entity\CoreConfigs;
 use Adteam\Core\Checkout\Validator;
 use Adteam\Core\Checkout\Entity\CoreUserTransactions;
 use Adteam\Core\Checkout\Entity\CoreOrders;
+use Adteam\Core\Checkout\Entity\CoreSurveyQuestions;
 
 class Checkout
 {
@@ -79,9 +80,9 @@ class Checkout
                 ];
         $validator = new Validator($params);
         if($validator->isValid()){
+            $this->saveSurvey($params);
             return $this->insertOrders($params,$data);
         }
-
     }
     
     /**
@@ -166,6 +167,16 @@ class Checkout
             $total += $item['price']*$item['quantity'];
         }
         return $total;        
+    }
+    
+    private function saveSurvey($params)
+    {
+        $isMandatory = isset($params['configs']['survey.isMandatory'])?
+                (boolean)$params['configs']['survey.isMandatory']:false;
+        if($isMandatory){
+            $em = $this->em->getRepository(CoreSurveyQuestions::class);
+            return $em->save($params);            
+        }
     }
 
 }

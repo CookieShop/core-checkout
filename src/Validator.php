@@ -12,6 +12,8 @@ use Adteam\Core\Checkout\Validator\Balance;
 use Adteam\Core\Checkout\Validator\Cartempty;
 use Adteam\Core\Checkout\Validator\Checkoutenabled;
 use Adteam\Core\Checkout\Validator\Survey;
+use Adteam\Core\Checkout\Validator\UserAddress;
+use Adteam\Core\Checkout\Validator\Cedis;
 
 /**
  * Description of Validator
@@ -61,6 +63,7 @@ class Validator
             $this->configs = $params['configs'];
             $this->balance = $params['balance'];
             $this->answers = $params['survey'];
+            $this->data    = $params['data']; 
         }
     }
     
@@ -74,7 +77,9 @@ class Validator
         if($this->balanceValidate()
                 &&$this->cartemptyValidate()
                 &&$this->checkoutenabledValidate()
-                &&$this->surveyValidate()        
+                &&$this->surveyValidate() 
+                &&$this->useraddressValidator()  
+                &&$this->cedisValidator()        
           ){
             $isValid = true;
         }
@@ -119,6 +124,18 @@ class Validator
     {
         $survey = new Survey($this->answers,$this->configs); 
         return $survey->isValid();
+    }
+    
+    public function useraddressValidator()
+    {
+        $useradress = new UserAddress($this->data,$this->configs);
+        return $useradress->isValid();
+    }
+    
+    public function cedisValidator()
+    {
+        $cedis = new Cedis($this->data,$this->configs);
+        return $cedis->isValid();        
     }
 
 }    
