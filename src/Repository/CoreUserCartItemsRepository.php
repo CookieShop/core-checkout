@@ -14,7 +14,6 @@ namespace Adteam\Core\Checkout\Repository;
  * @author dev
  */
 use Doctrine\ORM\EntityRepository;
-use Adteam\Core\Checkout\Entity\OauthUsers;
 
 class CoreUserCartItemsRepository extends EntityRepository
 {

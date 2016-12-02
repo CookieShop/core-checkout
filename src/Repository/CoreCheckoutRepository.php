@@ -37,5 +37,7 @@ class CoreCheckoutRepository extends EntityRepository
                 ->where('U.username = :username')
                 ->setParameter('username', $username)
                 ->getQuery()->getSingleResult();
-    }    
+    }   
+    
+    
 }
