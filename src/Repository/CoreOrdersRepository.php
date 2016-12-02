@@ -159,11 +159,16 @@ class CoreOrdersRepository extends EntityRepository
         if(isset($params['data']->cedis)){
             $order= $this->_em->getReference(CoreOrders::class, $orderId);
             $cedis= $this->_em->getReference(CoreCedis::class, $params['data']->cedis);
-            $CoreOrderCedis =  new CoreOrderCedis();
-            $CoreOrderCedis->setCedis($cedis);
-            $CoreOrderCedis->setOrder($order);
-            $this->_em->persist($CoreOrderCedis);
-            $this->_em->flush();               
+            try {
+                $CoreOrderCedis =  new CoreOrderCedis();
+                $CoreOrderCedis->setCedis($cedis);
+                $CoreOrderCedis->setOrder($order);
+                $this->_em->persist($CoreOrderCedis);
+                $this->_em->flush();                  
+            } catch (\Exception $ex) {
+           throw new \InvalidArgumentException('Cedis no existe');                  
+            }
+             
         }
     }
     
