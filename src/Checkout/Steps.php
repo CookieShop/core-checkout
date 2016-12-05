@@ -41,7 +41,10 @@ class Steps {
     {
         $result = $this->getConfigs();
         return [
-            'settings'=>[$result]
+            'settings'=>[
+                'surveyMode'=>$result['survey.isMandatory'],
+                'deliveryMode'=>$result['checkout.delivery.mode']                
+                ]
         ];
     }
     
