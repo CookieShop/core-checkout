@@ -40,8 +40,6 @@ class Steps {
     public function getSettings()
     {
         $result = $this->getConfigs();
-        var_dump($result);
-        exit;
         return [
             'settings'=>[
                 'surveyMode'=>$result['survey.isMandatory']==='1'?'fulfill':'none',
