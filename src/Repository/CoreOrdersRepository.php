@@ -41,6 +41,7 @@ class CoreOrdersRepository extends EntityRepository
                     OauthUsers::class, $params['identity']['id']);
                 $coreorders = new CoreOrders();
                 $coreorders->setUser($userId);
+                $coreorders->setCreatedBy($userId);
                 $coreorders->setTotal($params['totalcart']);
                 $coreorders->setRevision(1);
                 $em->persist($coreorders); 
