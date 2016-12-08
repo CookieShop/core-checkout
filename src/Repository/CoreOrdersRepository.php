@@ -98,10 +98,12 @@ class CoreOrdersRepository extends EntityRepository
                     OauthUsers::class, $params['identity']['id']);
             $order= $this->_em->getReference(CoreOrders::class, $idOrder);
             $corecrderaddressses = new CoreOrderAddressses();
+            unset($params['data']->userAddress['id']);
+            unset($params['data']->userAddress['main']);
             foreach ($params['data']->userAddress as $key=>$value){
                 $corecrderaddressses->setOrder($order);
                 $corecrderaddressses->setUser($user);
-
+                
                 if (method_exists($corecrderaddressses, 'set'.ucfirst($key))) {                
                     $corecrderaddressses->{'set'.ucfirst($key)}($value);
                 }
