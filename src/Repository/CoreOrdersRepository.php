@@ -109,7 +109,7 @@ class CoreOrdersRepository extends EntityRepository
                 }
                 else{
                     throw new \InvalidArgumentException(
-                    'Faltan campos en Json de Direcciones'); 
+                    'Missing_Fields_In_Address_Json'); 
                 }                
             }
             $this->_em->persist($corecrderaddressses);
@@ -169,7 +169,7 @@ class CoreOrdersRepository extends EntityRepository
                 $this->_em->persist($CoreOrderCedis);
                 $this->_em->flush();                  
             } catch (\Exception $ex) {
-           throw new \InvalidArgumentException('CEDIS_NOT_EXIST');                  
+           throw new \InvalidArgumentException('Cedis_Not_Exist');                  
             }
              
         }

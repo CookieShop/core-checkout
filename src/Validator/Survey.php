@@ -30,7 +30,7 @@ class Survey {
     {
         if(!is_array($this->survey)&&!is_null($this->survey)){
            throw new \InvalidArgumentException(
-                'SURVEY_FORMAT_INVALID');            
+                'Survey_Format_Invalid');            
         }
     }
     
@@ -38,7 +38,7 @@ class Survey {
     {
         if(is_null($this->survey)&&$this->config){
            throw new \InvalidArgumentException(
-                'SURVEY_REQUIRED');             
+                'Survey_Required');             
         }
     }
 }

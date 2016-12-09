@@ -32,7 +32,7 @@ class CoreSurveyQuestionsRepository extends EntityRepository
                 }
                 else{
                     throw new \InvalidArgumentException(
-                    'MISSING_FIELDS_IN_SURVEY_JSON'); 
+                    'Missing_Fields_In_Survey_Json'); 
                 }                
             }
             $this->_em->persist($coresurveyquestions);

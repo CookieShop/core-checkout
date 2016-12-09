@@ -43,7 +43,7 @@ class UserAddress {
     {
         if(!isset($this->data->userAddress)){
                throw new \InvalidArgumentException(
-                    'ADDRESS_IS_REQUIRED'); 
+                    'Address_Is_Required'); 
         }
     }
 }

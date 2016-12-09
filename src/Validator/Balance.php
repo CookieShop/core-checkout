@@ -28,7 +28,7 @@ class Balance {
     {
         if($this->getTotal()>$this->getAmount()){
            throw new \InvalidArgumentException(
-                'WITHOUT_FUNDS');             
+                'Without_Funds');             
         }
         return true;
     }

@@ -21,7 +21,7 @@ class Checkoutenabled
     {
         if(!$this->configs){
            throw new \InvalidArgumentException(
-                'CHECKOUT_STATUS');             
+                'Checkout_Status');             
         }
         return true;
     }
