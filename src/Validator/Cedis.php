@@ -42,7 +42,7 @@ class Cedis {
     {
         if(!isset($this->data->cedis)){
                throw new \InvalidArgumentException(
-                    'El cedis es requerido'); 
+                    'REQUIERED_CEDIS'); 
         }
     }
 }

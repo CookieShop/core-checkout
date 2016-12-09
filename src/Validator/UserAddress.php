@@ -43,7 +43,7 @@ class UserAddress {
     {
         if(!isset($this->data->userAddress)){
                throw new \InvalidArgumentException(
-                    'La Direccion es requerida'); 
+                    'ADDRESS_IS_REQUIRED'); 
         }
     }
 }

@@ -26,7 +26,7 @@ class Cartempty {
     {
         if(count($this->cart)<=0){
            throw new \InvalidArgumentException(
-                'Carrito Vacio');              
+                'EMPTY_CART');              
         }
         return true;
     }

@@ -28,7 +28,7 @@ class Balance {
     {
         if($this->getTotal()>$this->getAmount()){
            throw new \InvalidArgumentException(
-                'No se cuenta con los puntos suficientes');             
+                'WITHOUT_FUNDS');             
         }
         return true;
     }

@@ -169,7 +169,7 @@ class CoreOrdersRepository extends EntityRepository
                 $this->_em->persist($CoreOrderCedis);
                 $this->_em->flush();                  
             } catch (\Exception $ex) {
-           throw new \InvalidArgumentException('Cedis no existe');                  
+           throw new \InvalidArgumentException('CEDIS_NOT_EXIST');                  
             }
              
         }

@@ -21,7 +21,7 @@ class Checkoutenabled
     {
         if(!$this->configs){
            throw new \InvalidArgumentException(
-                'Canje deshabilitado');             
+                'CHECKOUT_STATUS');             
         }
         return true;
     }
