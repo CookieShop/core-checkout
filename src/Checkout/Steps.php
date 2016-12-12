@@ -43,7 +43,7 @@ class Steps {
         return [
             'settings'=>[
                 'surveyMode'=>$result['survey.isMandatory']==='1'?'fulfill':'none',
-                'deliveryMode'=> $this->hasEditable($result['checkout.delivery.mode']),
+                'deliveryMode'=> $this->hasEditable($result),
                 ]
         ];
     }
