@@ -36,6 +36,7 @@ class UserAddress {
         }
         
         if($this->config==='cedis'&&$this->editable==='editable'){
+            $this->isExistCedis();
             $isValid = true;
         }
         
