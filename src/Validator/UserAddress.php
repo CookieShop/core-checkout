@@ -33,7 +33,6 @@ class UserAddress {
         }
         
         if($this->config==='cedis'){
-            $this->isExistCedis();
             $isValid = true;
         }
         
