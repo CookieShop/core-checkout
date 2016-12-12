@@ -19,23 +19,20 @@ class UserAddress {
     
     protected $data;
     
-    protected $editable;
-    
     public function __construct($data,$configs) {
          $this->config = $configs['checkout.delivery.mode'];
-         $this->editable = $configs['checkout.delivery.userEditable'];
          $this->data = $data;
     }    
     
     public function isValid()
     {
        $isValid = false;
-        if($this->config==='user-address'&&$this->editable==='editable'){
+        if($this->config==='user-address'){
             $this->isExistAddress();
             $isValid = true;
         }
         
-        if($this->config==='cedis'&&$this->editable==='editable'){
+        if($this->config==='cedis'){
             $this->isExistCedis();
             $isValid = true;
         }
@@ -49,13 +46,5 @@ class UserAddress {
                throw new \InvalidArgumentException(
                     'Address_Is_Required'); 
         }
-    }
-    
-    private function isExistCedis()
-    {
-        if(!isset($this->data->cedis)){
-               throw new \InvalidArgumentException(
-                    'Cedis_Is_Required'); 
-        }        
     }
 }
