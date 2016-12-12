@@ -22,7 +22,10 @@ class CoreConfigsRepository extends EntityRepository
         $result = $this->createQueryBuilder('B')
                ->select("B.key, B.value")
                ->where("B.key in (:key)")
-               ->setParameter('key', ['checkout.delivery.mode','survey.isMandatory'])
+               ->setParameter('key', [
+                   'checkout.delivery.mode',
+                   'survey.isMandatory',
+                   'checkout.delivery.userEditable'])
                ->getQuery()->getResult();
         foreach ($result as $item){
             $items[$item['key']]=$item['value'];
