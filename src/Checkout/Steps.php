@@ -43,11 +43,16 @@ class Steps {
         return [
             'settings'=>[
                 'surveyMode'=>$result['survey.isMandatory']==='1'?'fulfill':'none',
-                'deliveryMode'=> $this->hasEditable($result),
+                'deliveryMode'=> $this->hasEditable($result['checkout.delivery.mode']),
                 ]
         ];
     }
     
+    /**
+     * 
+     * @param type $configs
+     * @return type
+     */
     private function hasEditable($configs)
     {
         return $configs['checkout.delivery.userEditable']==='editable'?
