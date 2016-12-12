@@ -18,8 +18,11 @@ class Cedis {
     
     protected $data;
     
+    protected $editable;
+    
     public function __construct($data,$configs) {
          $this->config = $configs['checkout.delivery.mode'];
+         $this->editable = $configs['checkout.delivery.userEditable'];
          $this->data = $data;
     }    
     
@@ -40,7 +43,7 @@ class Cedis {
     
     private function isExist()
     {
-        if(!isset($this->data->cedis)){
+        if(!isset($this->data->cedis)&&$this->editable==='editable'){
                throw new \InvalidArgumentException(
                     'Required_Cedis'); 
         }

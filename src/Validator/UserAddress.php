@@ -19,8 +19,11 @@ class UserAddress {
     
     protected $data;
     
+    protected $editable;
+    
     public function __construct($data,$configs) {
          $this->config = $configs['checkout.delivery.mode'];
+         $this->editable = $configs['checkout.delivery.userEditable'];
          $this->data = $data;
     }    
     
@@ -41,7 +44,7 @@ class UserAddress {
     
     private function isExistAddress()
     {
-        if(!isset($this->data->userAddress)){
+        if(!isset($this->data->userAddress)&&$this->editable==='editable'){
                throw new \InvalidArgumentException(
                     'Address_Is_Required'); 
         }
