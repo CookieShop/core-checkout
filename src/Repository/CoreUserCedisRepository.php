@@ -39,7 +39,7 @@ class CoreUserCedisRepository extends EntityRepository{
      */
     public function updateUserCedis($params)
     {
-        if($this->exist($params)){
+        if($this->exist($params)&&isset($params['data']->cedis)){
             $cedis =$params['data']->cedis;
             $this->createQueryBuilder('o')
             ->update(CoreUserCedis::class,'o')

@@ -39,7 +39,7 @@ class CoreUserAddressesRepository extends EntityRepository{
      */
     public function updateUserAddresses($params)
     {
-        if($this->exist($params)){
+        if($this->exist($params)&&isset($params['data']->userAddress)){
             $userAddress =$params['data']->userAddress;
             $update = $this->createQueryBuilder('o')
             ->update(CoreUserAddresses::class,'o');
