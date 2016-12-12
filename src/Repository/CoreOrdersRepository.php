@@ -60,10 +60,13 @@ class CoreOrdersRepository extends EntityRepository
         $currentRepo->insertCoreProducts($id, $params);
         $currentRepo->emptyCart($params); 
         $currentRepo->insertTransaction($params, $id);
-        $currentRepo->insertCoreAdresess($id, $params);
-        $currentRepo->updateUserAddresses($params);
-        $currentRepo->insertCedis($params, $id);   
-        $currentRepo->updateCedis($params);
+        if($params['configs']['checkout.delivery.userEditable']==='editable'){
+            $currentRepo->insertCoreAdresess($id, $params);
+            $currentRepo->updateUserAddresses($params);
+            $currentRepo->insertCedis($params, $id);   
+            $currentRepo->updateCedis($params);            
+        }
+
     }
 
     public function updateUserAddresses($params)
