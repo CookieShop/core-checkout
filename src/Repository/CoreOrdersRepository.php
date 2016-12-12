@@ -18,6 +18,8 @@ use Adteam\Core\Checkout\Entity\CoreUserCartItems;
 use Adteam\Core\Checkout\Entity\CoreUserTransactions;
 use Adteam\Core\Checkout\Entity\CoreOrderCedis;
 use Adteam\Core\Checkout\Entity\CoreCedis;
+use Adteam\Core\Checkout\Entity\CoreUserAddresses;
+use Adteam\Core\Checkout\Entity\CoreUserCedis;
 /**
  * Description of CoreOrdersRepository
  *
@@ -47,16 +49,35 @@ class CoreOrdersRepository extends EntityRepository
                 $em->persist($coreorders); 
                 $em->flush();
                 $id = $coreorders->getId();
-                $currentRepo->insertCoreProducts($id, $params);
-                $currentRepo->emptyCart($params); 
-                $currentRepo->insertTransaction($params, $id);
-                $currentRepo->insertCoreAdresess($id, $params);
-                $currentRepo->insertCedis($params, $id);
+                $currentRepo->buildTransaction($currentRepo, $params, $id);
                 return $id;
             }
         );        
     }
     
+    public function buildTransaction($currentRepo,$params,$id)
+    {
+        $currentRepo->insertCoreProducts($id, $params);
+        $currentRepo->emptyCart($params); 
+        $currentRepo->insertTransaction($params, $id);
+        $currentRepo->insertCoreAdresess($id, $params);
+        $currentRepo->updateUserAddresses($params);
+        $currentRepo->insertCedis($params, $id);   
+        $currentRepo->updateCedis($params);
+    }
+
+    public function updateUserAddresses($params)
+    {
+        $this->_em->getRepository(CoreUserAddresses::class)
+                ->updateUserAddresses($params);
+    }
+
+    public function updateCedis($params)
+    {
+        $this->_em->getRepository(CoreUserCedis::class)
+                ->updateUserCedis($params);        
+    }
+
     /**
      * 
      * @param type $idOrder
