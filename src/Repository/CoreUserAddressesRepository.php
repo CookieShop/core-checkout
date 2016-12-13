@@ -15,6 +15,7 @@ namespace Adteam\Core\Checkout\Repository;
  */
 use Doctrine\ORM\EntityRepository;
 use Adteam\Core\Checkout\Entity\CoreUserAddresses;
+use Adteam\Core\Checkout\Entity\OauthUsers;
 
 class CoreUserAddressesRepository extends EntityRepository{
     
@@ -50,6 +51,28 @@ class CoreUserAddressesRepository extends EntityRepository{
             $update->where('o.user = :user_id')
             ->setParameter('user_id', $params['identity']['id'])
             ->getQuery()->execute();  
+        }elseif(isset($params['data']->userAddress)){
+            $userAddress =$params['data']->userAddress;
+            $this->insert($userAddress, $params);
         }
+    }
+    
+    private function insert($userAddress,$params)
+    {
+        $user= $this->_em->getReference(
+                OauthUsers::class, $params['identity']['id']); 
+        $CoreUserAddresses = new CoreUserAddresses();
+        foreach ($userAddress as $key=>$value){
+            $CoreUserAddresses->setUser($user);
+            $CoreUserAddresses->setMain(1);
+            if (method_exists($CoreUserAddresses, 'set'.ucfirst($key))) {                
+                $CoreUserAddresses->{'set'.ucfirst($key)}($value);
+            }else{
+                throw new \InvalidArgumentException(
+                    'Missing_Fields_In_Survey_Json'); 
+            }            
+        }
+        $this->_em->persist($CoreUserAddresses);
+        $this->_em->flush();          
     }
 }

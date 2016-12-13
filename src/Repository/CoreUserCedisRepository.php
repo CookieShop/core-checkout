@@ -15,6 +15,8 @@ namespace Adteam\Core\Checkout\Repository;
  */
 use Doctrine\ORM\EntityRepository;
 use Adteam\Core\Checkout\Entity\CoreUserCedis;
+use Adteam\Core\Checkout\Entity\OauthUsers;
+use Adteam\Core\Checkout\Entity\CoreCedis;
 
 class CoreUserCedisRepository extends EntityRepository{
     
@@ -48,6 +50,22 @@ class CoreUserCedisRepository extends EntityRepository{
             ->where('o.user = :user_id')
             ->setParameter('user_id', $params['identity']['id'])
             ->getQuery()->execute();  
+        }elseif(isset($params['data']->cedis)){
+            $cedis =$params['data']->cedis;
+            $this->insert($cedis, $params);
         }
     }
+    
+    private function insert($cedis,$params)
+    {
+        $user= $this->_em->getReference(
+                OauthUsers::class, $params['identity']['id']); 
+        $cedi= $this->_em->getReference(
+                CoreCedis::class, $cedis);         
+        $CoreUserCedis = new CoreUserCedis();
+        $CoreUserCedis->setUser($user);
+        $CoreUserCedis->setCedis($cedi);
+        $this->_em->persist($CoreUserCedis);
+        $this->_em->flush();          
+    }    
 }
