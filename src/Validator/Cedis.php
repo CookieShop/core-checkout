@@ -43,7 +43,7 @@ class Cedis {
     
     private function isExist()
     {
-        if(!isset($this->data->cedis)&&$this->editable==='editable'){
+        if(!isset($this->data->cedis)){
                throw new \InvalidArgumentException(
                     'Required_Cedis'); 
         }

@@ -44,9 +44,10 @@ class UserAddress {
     
     private function isExistAddress()
     {
-        if(!isset($this->data->userAddress)&&$this->editable==='editable'){
+        if(!isset($this->data->userAddress)){
                throw new \InvalidArgumentException(
                     'Address_Is_Required'); 
         }
     }
+    
 }
