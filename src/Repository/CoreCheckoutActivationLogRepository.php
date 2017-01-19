@@ -9,6 +9,7 @@
 namespace Adteam\Core\Checkout\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Adteam\Core\Checkout\Entity\CoreConfigs;
 use Adteam\Core\Checkout\Entity\OauthUsers;
 use Adteam\Core\Checkout\Entity\CoreCheckoutActivationLog;
 
@@ -22,18 +23,27 @@ class CoreCheckoutActivationLogRepository extends EntityRepository
      */
     public function fetchLast()
     {
-       $result = $this->createQueryBuilder('B')
-               ->select("B.status as enabled,DATE_FORMAT(B.createdAt,'%d-%m-%Y".
-                       " %H:%i:%s') as version")
-//        ->select("B.status as enabled,B.createdAt as version")
-               ->innerJoin('B.requestedBy', 'R')
-               ->orderBy('B.createdAt','DESC')
-               ->getQuery()->getResult();
-        if(isset($result[0])){
-            return $result[0];
+        $config = $this->_em->getRepository(CoreConfigs::class)->getCheckoutRange();
+
+        $currentTime = time();
+        $rangeStart = isset($config['checkout.date.start']) ? (int)$config['checkout.date.start'] : 0;
+        $rangeEnd = isset($config['checkout.date.end']) ? (int)$config['checkout.date.end'] : 0;
+
+        $checkoutIsActive = $rangeStart <= $currentTime && $currentTime <= $rangeEnd;
+
+        $result = $this->createQueryBuilder('B')
+            ->select("B.status as enabled,DATE_FORMAT(B.createdAt,'%d-%m-%Y" .
+                " %H:%i:%s') as version")
+            ->innerJoin('B.requestedBy', 'R')
+            ->orderBy('B.createdAt', 'DESC')
+            ->getQuery()->getResult();
+        if (isset($result[0])) {
+            $checkout = (array)$result[0];
+            $checkout['enabled'] = $checkoutIsActive;
+            return $checkout;
         }
-           throw new \InvalidArgumentException(
-                'Inicializar_canje'); 
+        throw new \InvalidArgumentException(
+            'Inicializar_canje');
     }
     
     /**
