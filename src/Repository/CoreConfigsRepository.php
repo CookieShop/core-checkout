@@ -13,26 +13,31 @@ use Doctrine\ORM\EntityRepository;
 class CoreConfigsRepository extends EntityRepository
 {
     /**
-     * 
-     * @return type
+     *
+     * @return array
      */
     public function getConfig()
     {
         $items = [];
+
         $result = $this->createQueryBuilder('B')
-               ->select("B.key, B.value")
-               ->where("B.key in (:key)")
-               ->setParameter('key', [
-                   'checkout.delivery.mode',
-                   'survey.isMandatory',
-                   'checkout.delivery.userEditable'])
-               ->getQuery()->getResult();
-        foreach ($result as $item){
-            $items[$item['key']]=$item['value'];
+            ->select("B.key, B.value")
+            ->where("B.key in (:key)")
+            ->setParameter('key', [
+                'checkout.delivery.mode',
+                'survey.isMandatory',
+                'checkout.delivery.userEditable',
+                'checkout.date.start',
+                'checkout.date.end'
+            ])->getQuery()->getResult();
+
+        foreach ($result as $item) {
+            $items[$item['key']] = $item['value'];
         }
-        return $items;    
+
+        return $items;
     }
-    
+
     public function getKey($key)
     {
         return $this->createQueryBuilder('B')

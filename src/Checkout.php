@@ -119,20 +119,28 @@ class Checkout
                 ->getQuery()->getScalarResult(); 
        
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function getConfigs()
     {
         $em = $this->service->get(EntityManager::class);
         $config = $em->getRepository(CoreConfigs::class)->getConfig();
-        $key = $em->getRepository(CoreConfigs::class)->getKey('checkout.enabled'); 
-        $config[$key['key']]=$key['value'];
+
+        // Validate if checkout is within an active range
+        $currentTime = time();
+        $rangeStart = isset($config['checkout.date.start']) ? (int)$config['checkout.date.start'] : 0;
+        $rangeEnd = isset($config['checkout.date.end']) ? (int)$config['checkout.date.end'] : 0;
+
+        $checkoutIsActive = $rangeStart <= $currentTime && $currentTime <= $rangeEnd;
+
+        $config['checkout.enabled'] = intval($checkoutIsActive);
+
         return $config;
-    } 
-    
+    }
+
     /**
      * 
      * @param type $userId
