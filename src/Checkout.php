@@ -190,7 +190,7 @@ class Checkout
     {
         $identity = $this->getUserByUsername($this->identity['user_id']);       
         $result = $this->getSurvey($identity['id']);
-        return $surveyMode==='1'&&count($result)===0?'fulfill':'none';
+        return $surveyMode==='1'&&count($result)===0?'1':'0';
     }
 
     /**
