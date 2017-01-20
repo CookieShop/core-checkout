@@ -119,28 +119,22 @@ class Checkout
                 ->getQuery()->getScalarResult(); 
        
     }
-
+    
     /**
-     *
+     * 
      * @return array
      */
     public function getConfigs()
     {
         $em = $this->service->get(EntityManager::class);
         $config = $em->getRepository(CoreConfigs::class)->getConfig();
-
-        // Validate if checkout is within an active range
-        $currentTime = time();
-        $rangeStart = isset($config['checkout.date.start']) ? (int)$config['checkout.date.start'] : 0;
-        $rangeEnd = isset($config['checkout.date.end']) ? (int)$config['checkout.date.end'] : 0;
-
-        $checkoutIsActive = $rangeStart <= $currentTime && $currentTime <= $rangeEnd;
-
-        $config['checkout.enabled'] = intval($checkoutIsActive);
-
+        $isMandatory = $config['survey.isMandatory'];
+        $config['survey.isMandatory'] = $this->hasAnswered($isMandatory);
+        $key = $em->getRepository(CoreConfigs::class)->getKey('checkout.enabled'); 
+        $config[$key['key']]=$key['value'];
         return $config;
-    }
-
+    } 
+    
     /**
      * 
      * @param type $userId
@@ -186,5 +180,34 @@ class Checkout
             return $em->save($params);            
         }
     }
+
+    /**
+     * 
+     * @param type $surveyMode
+     * @return type
+     */
+    private function hasAnswered($surveyMode)
+    {
+        $identity = $this->getUserByUsername($this->identity['user_id']);       
+        $result = $this->getSurvey($identity['id']);
+        return $surveyMode==='1'&&count($result)===0?'fulfill':'none';
+    }
+
+    /**
+     * 
+     * @param type $userId
+     * @return type
+     */
+    private function getSurvey($userId)
+    {
+        $em = $this->service->get(EntityManager::class);
+        return $em->getRepository(CoreSurveyQuestions::class)
+                ->createQueryBuilder('U')
+                ->select('U.id,R.id')
+                ->innerJoin('U.user', 'R')
+                ->where('R.id = :userId')
+                ->setParameter('userId', $userId)
+                ->getQuery()->getResult();        
+    }    
 
 }
